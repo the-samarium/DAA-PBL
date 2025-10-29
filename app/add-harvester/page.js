@@ -13,6 +13,7 @@ import { PlusCircle } from 'lucide-react'
 
 export default function AddHarvesterPage() {
   const router = useRouter()
+  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -26,6 +27,8 @@ export default function AddHarvesterPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
         router.push('/login')
+      } else {
+        setUser(user)
       }
     }
     checkAuth()
@@ -33,6 +36,8 @@ export default function AddHarvesterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!user) return
+    
     setLoading(true)
 
     try {
@@ -42,14 +47,16 @@ export default function AddHarvesterPage() {
           name: formData.name,
           image: formData.image || 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800',
           price_per_day: parseFloat(formData.pricePerDay),
-          description: formData.description
+          description: formData.description,
+          user_id: user.id  // Store the user_id
         })
 
       if (error) throw error
 
       toast.success('Harvester added successfully!')
-      router.push('/home/harvesters')
+      router.push('/dashboard/my-added-equipments')
     } catch (error) {
+      console.error('Add harvester error:', error)
       toast.error('Failed to add harvester')
     } finally {
       setLoading(false)
@@ -57,7 +64,7 @@ export default function AddHarvesterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] py-12">
+    <div className="min-h-screen p-8">
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto space-y-8">
           <div className="text-center">
