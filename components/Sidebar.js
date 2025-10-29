@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Package, History, PlusCircle, Menu, X } from 'lucide-react'
+import { Home, Package, History, PlusCircle, Menu, X, ListChecks, Calendar, CreditCard } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -13,8 +13,11 @@ export default function Sidebar() {
   const navItems = [
     { href: '/dashboard', icon: Home, label: 'Dashboard' },
     { href: '/home/harvesters', icon: Package, label: 'Harvesters' },
+    { href: '/dashboard/my-added-equipments', icon: ListChecks, label: 'My Equipments' },
+    { href: '/dashboard/my-rented-equipments', icon: Calendar, label: 'My Rentals' },
     { href: '/history', icon: History, label: 'History' },
     { href: '/add-harvester', icon: PlusCircle, label: 'Add Harvester' },
+    { href: '/dashboard/subscription', icon: CreditCard, label: 'Subscription' },
   ]
 
   return (
@@ -39,7 +42,7 @@ export default function Sidebar() {
       <aside
         className={cn(
           "fixed top-0 left-0 h-screen bg-[#0A0A0A] border-r border-[#0F5132]/30 transition-transform duration-300 z-40",
-          "w-64 flex flex-col",
+          "w-64 flex flex-col overflow-y-auto",
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
@@ -57,10 +60,10 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon
-            const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
+            const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
             
             return (
               <Link
@@ -68,7 +71,7 @@ export default function Sidebar() {
                 href={item.href}
                 onClick={() => setIsOpen(false)}
                 className={cn(
-                  "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all",
+                  "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all text-sm",
                   isActive
                     ? "bg-[#0F5132] text-white shadow-lg shadow-[#0F5132]/20"
                     : "text-gray-400 hover:bg-[#0F5132]/10 hover:text-[#0F5132]"
