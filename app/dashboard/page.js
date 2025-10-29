@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { supabase } from '@/lib/supabaseClient'
-import { Package, TrendingUp, Clock, DollarSign } from 'lucide-react'
+import { Package, TrendingUp, Clock, DollarSign, ExternalLink } from 'lucide-react'
+import Link from 'next/link'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -14,6 +15,7 @@ export default function DashboardPage() {
     myPurchases: 0,
     activeRentals: 0
   })
+  const [promotions, setPromotions] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -23,7 +25,10 @@ export default function DashboardPage() {
         router.push('/login')
       } else {
         setUser(user)
-        await fetchStats(user.id)
+        await Promise.all([
+          fetchStats(user.id),
+          fetchPromotions()
+        ])
       }
       setLoading(false)
     }
@@ -43,15 +48,40 @@ export default function DashboardPage() {
         .select('*')
         .eq('user_id', userId)
 
-      const rentals = purchases?.filter(p => p.type === 'rent').length || 0
+      // Get user's rentals
+      const { data: rentals } = await supabase
+        .from('rentals')
+        .select('*')
+        .eq('user_id', userId)
+
+      const activeRentals = rentals?.filter(r => {
+        const returnDate = new Date(r.return_date)
+        const today = new Date()
+        return returnDate >= today
+      }).length || 0
       
       setStats({
         totalHarvesters: harvestersCount || 0,
         myPurchases: purchases?.length || 0,
-        activeRentals: rentals
+        activeRentals: activeRentals
       })
     } catch (error) {
       console.error('Error fetching stats:', error)
+    }
+  }
+
+  const fetchPromotions = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('promotions')
+        .select('*')
+        .eq('is_active', true)
+        .limit(3)
+
+      if (error) throw error
+      setPromotions(data || [])
+    } catch (error) {
+      console.error('Error fetching promotions:', error)
     }
   }
 
@@ -113,6 +143,45 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Recommended Promotions */}
+        {promotions.length > 0 && (
+          <Card className="bg-[#0A0A0A] border-[#0F5132]">
+            <CardHeader>
+              <CardTitle className="text-white">Recommended for You</CardTitle>
+              <CardDescription className="text-gray-400">
+                Special offers and featured listings
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-3 gap-4">
+                {promotions.map((promo) => (
+                  <Link key={promo.id} href={promo.link || '#'}>
+                    <div className="bg-[#0F5132]/10 border border-[#0F5132]/30 rounded-lg overflow-hidden hover:border-[#0F5132] transition-all cursor-pointer group">
+                      <div className="aspect-video bg-gray-800 overflow-hidden">
+                        <img
+                          src={promo.image || 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800'}
+                          alt={promo.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-white font-semibold mb-1 group-hover:text-[#0F5132] transition-colors">
+                          {promo.title}
+                        </h3>
+                        <p className="text-sm text-gray-400 line-clamp-2">{promo.description}</p>
+                        <div className="flex items-center mt-2 text-[#0F5132] text-sm">
+                          <span>Learn more</span>
+                          <ExternalLink className="h-3 w-3 ml-1" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Quick Actions */}
         <Card className="bg-[#0A0A0A] border-[#0F5132]">
