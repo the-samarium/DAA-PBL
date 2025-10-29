@@ -52,3 +52,57 @@ CREATE INDEX IF NOT EXISTS idx_harvesters_user_id ON harvesters(user_id);
 CREATE INDEX IF NOT EXISTS idx_rentals_user_id ON rentals(user_id);
 CREATE INDEX IF NOT EXISTS idx_rentals_harvester_id ON rentals(harvester_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON subscriptions(user_id);
+
+-- 7. Create purchases table (used for buy flow)
+CREATE TABLE IF NOT EXISTS purchases (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES auth.users(id),
+  harvester_id UUID NOT NULL REFERENCES harvesters(id) ON DELETE CASCADE,
+  type TEXT NOT NULL CHECK (type IN ('rent','buy')),
+  date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  customer_name TEXT,
+  contact_number TEXT,
+  delivery_address TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 8. Enable RLS and policies
+ALTER TABLE harvesters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE rentals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE purchases ENABLE ROW LEVEL SECURITY;
+ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE promotions ENABLE ROW LEVEL SECURITY;
+
+-- harvesters policies
+CREATE POLICY IF NOT EXISTS "harvesters_select_auth" ON harvesters
+FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY IF NOT EXISTS "harvesters_insert_self" ON harvesters
+FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "harvesters_delete_self" ON harvesters
+FOR DELETE USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "harvesters_update_self" ON harvesters
+FOR UPDATE USING (auth.uid() = user_id);
+
+-- rentals policies (only own rentals)
+CREATE POLICY IF NOT EXISTS "rentals_select_self" ON rentals
+FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "rentals_insert_self" ON rentals
+FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- purchases policies (only own purchases)
+CREATE POLICY IF NOT EXISTS "purchases_select_self" ON purchases
+FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "purchases_insert_self" ON purchases
+FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- subscriptions policies (own row)
+CREATE POLICY IF NOT EXISTS "subscriptions_select_self" ON subscriptions
+FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "subscriptions_upsert_self" ON subscriptions
+FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY IF NOT EXISTS "subscriptions_update_self" ON subscriptions
+FOR UPDATE USING (auth.uid() = user_id);
+
+-- promotions policies (read for everyone)
+CREATE POLICY IF NOT EXISTS "promotions_select_all" ON promotions
+FOR SELECT USING (true);

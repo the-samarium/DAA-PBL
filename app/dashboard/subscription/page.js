@@ -197,9 +197,25 @@ export default function SubscriptionPage() {
                   </div>
                 )}
                 <CardHeader>
-                  <div className={`h-12 w-12 bg-${plan.color}-500/20 rounded-lg flex items-center justify-center mb-4`}>
-                    <Icon className={`h-6 w-6 text-${plan.color}-500`} />
-                  </div>
+                  {(() => {
+                    const iconBgClass =
+                      plan.id === 'free'
+                        ? 'bg-gray-500/20'
+                        : plan.id === 'basic'
+                        ? 'bg-blue-500/20'
+                        : 'bg-[#0F5132]/20'
+                    const iconTextClass =
+                      plan.id === 'free'
+                        ? 'text-gray-500'
+                        : plan.id === 'basic'
+                        ? 'text-blue-500'
+                        : 'text-[#0F5132]'
+                    return (
+                      <div className={`h-12 w-12 ${iconBgClass} rounded-lg flex items-center justify-center mb-4`}>
+                        <Icon className={`h-6 w-6 ${iconTextClass}`} />
+                      </div>
+                    )
+                  })()}
                   <CardTitle className="text-white text-2xl">{plan.name}</CardTitle>
                   <div className="flex items-baseline mt-4">
                     <span className="text-4xl font-bold text-white">${plan.price}</span>

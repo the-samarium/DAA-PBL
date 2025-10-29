@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabaseClient'
 import { toast } from 'sonner'
-import { Trash2, DollarSign, Edit } from 'lucide-react'
+import { Trash2, DollarSign } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,

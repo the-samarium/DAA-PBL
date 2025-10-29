@@ -99,7 +99,12 @@ export default function HistoryPage() {
                               {purchase.harvesters?.name || 'Unknown Harvester'}
                             </h3>
                             <p className="text-sm text-gray-400 mt-1">
-                              Order Date: {format(new Date(purchase.date), 'MMM dd, yyyy')}
+                              {(() => {
+                                const orderDate = purchase?.date || purchase?.created_at
+                                return orderDate
+                                  ? `Order Date: ${format(new Date(orderDate), 'MMM dd, yyyy')}`
+                                  : 'Order Date: N/A'
+                              })()}
                             </p>
                           </div>
                           <Badge 

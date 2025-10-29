@@ -85,7 +85,7 @@ export default function CheckoutPage() {
             user_id: user.id,
             harvester_id: harvesterId,
             rental_days: rentalDays,
-            total_price: calculateTotalPrice(),
+            total_price: parseFloat(calculateTotalPrice()),
             rent_date: rentDate.toISOString(),
             return_date: returnDate.toISOString(),
             customer_name: formData.customerName,
@@ -103,6 +103,7 @@ export default function CheckoutPage() {
             user_id: user.id,
             harvester_id: harvesterId,
             type: type,
+            date: new Date().toISOString(),
             customer_name: formData.customerName,
             contact_number: formData.contactNumber,
             delivery_address: formData.deliveryAddress
@@ -115,7 +116,8 @@ export default function CheckoutPage() {
       router.push(type === 'rent' ? '/dashboard/my-rented-equipments' : '/history')
     } catch (error) {
       console.error('Checkout error:', error)
-      toast.error('Failed to place order')
+      const message = error?.message || error?.error_description || 'Failed to place order'
+      toast.error(message)
     } finally {
       setSubmitting(false)
     }
