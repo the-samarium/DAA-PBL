@@ -1,4 +1,4 @@
-## AgriLink Lite
+## AgriLink
 
 Next.js app to rent/buy agricultural equipment using Supabase (auth + data) and Tailwind (shadcn/ui).
 
