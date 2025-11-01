@@ -139,8 +139,7 @@ export default function MyRentedEquipmentsPage() {
                           <div>
                             <p className="text-xs text-gray-500">Total Price</p>
                             <p className="text-sm text-[#0F5132] font-bold">
-                              <DollarSign className="h-3 w-3 inline" />
-                              {parseFloat(rental.total_price).toFixed(2)}
+                              Rs. {parseFloat(rental.total_price).toFixed(2)}
                             </p>
                           </div>
                         </div>

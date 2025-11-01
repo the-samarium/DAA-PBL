@@ -129,7 +129,7 @@ export default function HistoryPage() {
                           <div>
                             <p className="text-xs text-gray-500">Daily Rate</p>
                             <p className="text-sm text-[#0F5132] font-semibold">
-                              ${parseFloat(purchase.harvesters?.price_per_day || 0).toFixed(2)}/day
+                              Rs. {parseFloat(purchase.harvesters?.price_per_day || 0).toFixed(2)}/day
                             </p>
                           </div>
                         </div>

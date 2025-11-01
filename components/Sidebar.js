@@ -54,7 +54,6 @@ export default function Sidebar() {
             </div>
             <div>
               <h1 className="text-lg font-bold text-white">AgriLink</h1>
-              <p className="text-xs text-gray-400">Lite</p>
             </div>
           </Link>
         </div>

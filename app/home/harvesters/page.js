@@ -110,8 +110,7 @@ export default function HarvestersPage() {
                       </CardDescription>
                     </div>
                     <div className="flex items-center space-x-2 text-[#0F5132] font-bold text-xl">
-                      <DollarSign className="h-5 w-5" />
-                      <span>{parseFloat(harvester.price_per_day).toFixed(2)}</span>
+                      <span>Rs. {parseFloat(harvester.price_per_day).toFixed(2)}</span>
                       <span className="text-sm text-gray-400 font-normal">/day</span>
                     </div>
                     <div className="flex space-x-2">

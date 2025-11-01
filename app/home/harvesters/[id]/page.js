@@ -97,8 +97,7 @@ export default function HarvesterDetailPage({ params }) {
                 </div>
                 <div className="bg-[#0F5132]/20 px-4 py-2 rounded-lg">
                   <div className="flex items-center space-x-2 text-[#0F5132] font-bold text-2xl">
-                    <DollarSign className="h-6 w-6" />
-                    <span>{parseFloat(harvester.price_per_day).toFixed(2)}</span>
+                    <span>Rs. {parseFloat(harvester.price_per_day).toFixed(2)}</span>
                   </div>
                   <p className="text-sm text-gray-400 text-center mt-1">/day</p>
                 </div>
@@ -119,7 +118,7 @@ export default function HarvesterDetailPage({ params }) {
                   </div>
                   <div className="bg-[#0F5132]/10 border border-[#0F5132]/30 rounded-lg p-4">
                     <p className="text-gray-400 text-sm">Daily Rate</p>
-                    <p className="text-white font-semibold">${parseFloat(harvester.price_per_day).toFixed(2)}</p>
+                    <p className="text-white font-semibold">Rs. {parseFloat(harvester.price_per_day).toFixed(2)}</p>
                   </div>
                   <div className="bg-[#0F5132]/10 border border-[#0F5132]/30 rounded-lg p-4">
                     <p className="text-gray-400 text-sm">Type</p>

@@ -120,8 +120,7 @@ export default function MyAddedEquipmentsPage() {
                     </p>
                   </div>
                   <div className="flex items-center space-x-2 text-[#0F5132] font-bold">
-                    <DollarSign className="h-4 w-4" />
-                    <span>{parseFloat(equipment.price_per_day).toFixed(2)}</span>
+                    <span>Rs. {parseFloat(equipment.price_per_day).toFixed(2)}</span>
                     <span className="text-xs text-gray-400 font-normal">/day</span>
                   </div>
                   <div className="flex gap-2 pt-2">

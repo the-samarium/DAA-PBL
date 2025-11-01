@@ -111,7 +111,7 @@ export default function AddHarvesterPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="price" className="text-white">Price Per Day ($) *</Label>
+                  <Label htmlFor="price" className="text-white">Price Per Day (Rs.) *</Label>
                   <Input
                     id="price"
                     type="number"

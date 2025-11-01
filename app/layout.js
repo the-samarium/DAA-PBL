@@ -6,7 +6,7 @@ import LayoutWrapper from '@/components/LayoutWrapper'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'AgriLink Lite - Connecting Farmers with Modern Equipment',
+  title: 'AgriLink - Connecting Farmers with Modern Equipment',
   description: 'Rent or buy harvesters and agricultural equipment easily',
 }
 

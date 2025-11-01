@@ -218,7 +218,7 @@ export default function SubscriptionPage() {
                   })()}
                   <CardTitle className="text-white text-2xl">{plan.name}</CardTitle>
                   <div className="flex items-baseline mt-4">
-                    <span className="text-4xl font-bold text-white">${plan.price}</span>
+                    <span className="text-4xl font-bold text-white">Rs. {plan.price}</span>
                     <span className="text-gray-400 ml-2">/month</span>
                   </div>
                 </CardHeader>

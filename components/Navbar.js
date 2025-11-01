@@ -51,7 +51,7 @@ export default function Navbar() {
               <div className="h-8 w-8 bg-[#0F5132]/20 rounded-lg flex items-center justify-center">
                 <span className="text-[#0F5132] font-bold text-xl">A</span>
               </div>
-              <span className="text-xl font-bold text-white">AgriLink Lite</span>
+              <span className="text-xl font-bold text-white">AgriLink</span>
             </Link>
 
             <div className="flex items-center space-x-4">

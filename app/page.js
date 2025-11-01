@@ -16,7 +16,7 @@ export default function LandingPage() {
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Rent or purchase high-quality harvesters and agricultural equipment. 
-            Simplify your farming operations with AgriLink Lite.
+            Simplify your farming operations with AgriLink.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Link href="/signup">
@@ -74,7 +74,7 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto bg-[#0F5132]/20 border border-[#0F5132] rounded-lg p-12 text-center space-y-6">
           <h2 className="text-3xl font-bold">Ready to Get Started?</h2>
           <p className="text-gray-300">
-            Join AgriLink Lite today and discover how easy it is to access the equipment you need.
+            Join AgriLink today and discover how easy it is to access the equipment you need.
           </p>
           <Link href="/signup">
             <Button size="lg" className="bg-[#0F5132] text-white hover:bg-[#0F5132]/80">
@@ -89,7 +89,7 @@ export default function LandingPage() {
       <footer className="border-t border-[#0F5132]/30 mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-400 text-sm">© 2024 AgriLink Lite. All rights reserved.</p>
+            <p className="text-gray-400 text-sm">© 2024 AgriLink. All rights reserved.</p>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-[#0F5132] text-sm transition-colors">About</a>
               <a href="#" className="text-gray-400 hover:text-[#0F5132] text-sm transition-colors">Contact</a>

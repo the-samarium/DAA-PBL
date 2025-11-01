@@ -229,7 +229,7 @@ export default function CheckoutPage() {
                     <div className="pt-2 border-t border-[#0F5132]/30">
                       <div className="flex justify-between text-sm mb-1">
                         <span className="text-gray-400">Price per day</span>
-                        <span className="text-white">${parseFloat(harvester?.price_per_day || 0).toFixed(2)}</span>
+                        <span className="text-white">Rs. {parseFloat(harvester?.price_per_day || 0).toFixed(2)}</span>
                       </div>
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-400">Number of days</span>
@@ -242,9 +242,8 @@ export default function CheckoutPage() {
                 <div className="bg-[#0F5132]/10 border border-[#0F5132]/30 rounded-lg p-4">
                   <p className="text-gray-400 text-sm mb-1">Total Price</p>
                   <div className="flex items-center">
-                    <DollarSign className="h-6 w-6 text-[#0F5132]" />
                     <p className="text-[#0F5132] font-bold text-3xl">
-                      {calculateTotalPrice()}
+                      Rs. {calculateTotalPrice()}
                     </p>
                   </div>
                   {type === 'rent' && (
