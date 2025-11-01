@@ -21,13 +21,21 @@ export default function CheckoutPage() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  
+
   const [rentalDays, setRentalDays] = useState(1)
   const [formData, setFormData] = useState({
     customerName: '',
     contactNumber: '',
     deliveryAddress: ''
   })
+
+  useEffect(() => {
+  const script = document.createElement('script')
+  script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+  script.async = true
+  document.body.appendChild(script)
+}, [])
+
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -68,60 +76,100 @@ export default function CheckoutPage() {
     return (parseFloat(harvester.price_per_day) * 30).toFixed(2) // Assume purchase = 30 days value
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setSubmitting(true)
+  const processOrder = async () => {
+  try {
+    if (type === 'rent') {
+      const rentDate = new Date()
+      const returnDate = new Date()
+      returnDate.setDate(returnDate.getDate() + rentalDays)
 
-    try {
-      if (type === 'rent') {
-        // Create rental record
-        const rentDate = new Date()
-        const returnDate = new Date()
-        returnDate.setDate(returnDate.getDate() + rentalDays)
+      const { error } = await supabase
+        .from('rentals')
+        .insert({
+          user_id: user.id,
+          harvester_id: harvesterId,
+          rental_days: rentalDays,
+          total_price: parseFloat(calculateTotalPrice()),
+          rent_date: rentDate.toISOString(),
+          return_date: returnDate.toISOString(),
+          customer_name: formData.customerName,
+          contact_number: formData.contactNumber,
+          delivery_address: formData.deliveryAddress
+        })
 
-        const { error } = await supabase
-          .from('rentals')
-          .insert({
-            user_id: user.id,
-            harvester_id: harvesterId,
-            rental_days: rentalDays,
-            total_price: parseFloat(calculateTotalPrice()),
-            rent_date: rentDate.toISOString(),
-            return_date: returnDate.toISOString(),
-            customer_name: formData.customerName,
-            contact_number: formData.contactNumber,
-            delivery_address: formData.deliveryAddress
-          })
+      if (error) throw error
+      toast.success(`Equipment rented for ${rentalDays} days successfully!`)
+    } else {
+      const { error } = await supabase
+        .from('purchases')
+        .insert({
+          user_id: user.id,
+          harvester_id: harvesterId,
+          type: type,
+          date: new Date().toISOString(),
+          customer_name: formData.customerName,
+          contact_number: formData.contactNumber,
+          delivery_address: formData.deliveryAddress
+        })
 
-        if (error) throw error
-        toast.success(`Equipment rented for ${rentalDays} days successfully!`)
-      } else {
-        // Create purchase record (existing flow)
-        const { error } = await supabase
-          .from('purchases')
-          .insert({
-            user_id: user.id,
-            harvester_id: harvesterId,
-            type: type,
-            date: new Date().toISOString(),
-            customer_name: formData.customerName,
-            contact_number: formData.contactNumber,
-            delivery_address: formData.deliveryAddress
-          })
-
-        if (error) throw error
-        toast.success('Order placed successfully!')
-      }
-
-      router.push(type === 'rent' ? '/dashboard/my-rented-equipments' : '/history')
-    } catch (error) {
-      console.error('Checkout error:', error)
-      const message = error?.message || error?.error_description || 'Failed to place order'
-      toast.error(message)
-    } finally {
-      setSubmitting(false)
+      if (error) throw error
+      toast.success('Order placed successfully!')
     }
+
+    router.push(type === 'rent' ? '/dashboard/my-rented-equipments' : '/history')
+  } catch (error) {
+    console.error('Checkout error:', error)
+    const message = error?.message || error?.error_description || 'Failed to place order'
+    toast.error(message)
+  } finally {
+    setSubmitting(false)
   }
+}
+
+
+  const handleSubmit = async (e) => {
+  e.preventDefault()
+  setSubmitting(true)
+
+  try {
+    const amount = parseFloat(calculateTotalPrice()) * 100 // convert ₹ to paise
+
+    // ✅ Razorpay options
+    const options = {
+      key: 'rzp_test_RR6a758d7IMngS', // ⚠️ use your Razorpay Key ID (not secret)
+      amount: amount,
+      currency: 'INR',
+      name: 'Farm Equipment Rentals',
+      description: type === 'rent' ? 'Equipment Rental Payment' : 'Equipment Purchase',
+      handler: async function (response) {
+        console.log('Payment success:', response)
+        toast.success('Payment successful!')
+        await processOrder() // <-- your Supabase logic runs only after success
+      },
+      prefill: {
+        name: formData.customerName,
+        contact: formData.contactNumber,
+      },
+      theme: { color: '#1E88E5' },
+    }
+
+    // ✅ Open Razorpay Checkout
+    const rzp = new window.Razorpay(options)
+    rzp.open()
+
+    // Handle payment failure
+    rzp.on('payment.failed', function (response) {
+      console.error('Payment failed:', response.error)
+      toast.error('Payment failed. Please try again.')
+      setSubmitting(false)
+    })
+  } catch (error) {
+    console.error('Payment initialization error:', error)
+    toast.error('Unable to start payment process.')
+    setSubmitting(false)
+  }
+}
+
 
   if (loading) {
     return (
