@@ -82,7 +82,7 @@ I help you find agricultural equipment using advanced algorithms.
 
 *DAA Concepts Used:*
 • Sorting Algorithms (Quick Sort, Merge Sort)
-• Search Algorithms (Binary Search, BST, Trie)
+• Search Algorithms (Trie)
 • Data Structures (Priority Queue)
 
 Type /help for detailed information about each command.
@@ -133,7 +133,6 @@ This bot demonstrates Design and Analysis of Algorithms concepts:
 • Merge Sort for stable sorting
 • Quick Sort for efficient sorting
 • Priority Queue for top-k recommendations
-• Binary Search for fast lookups
     `;
 
     await this.bot.sendMessage(msg.chat.id, helpText, { parse_mode: 'Markdown' });

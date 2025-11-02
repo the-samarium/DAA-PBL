@@ -7,7 +7,7 @@
    - Navigate to SQL Editor (left sidebar)
 
 2. **Copy and Run SQL**
-   - Copy the SQL from `add-sample-equipment.sql`
+   - Copy the SQL from `CREATE_AND_INSERT.sql`
    - Paste it into the SQL Editor
    - Click "Run" or press Ctrl+Enter
 
@@ -42,8 +42,8 @@ Once you've added the data, restart your bot (if needed) and test:
    - `/recommend price` - Should show sorted by price (Merge Sort)
    - `/recommend rating` - Should show sorted by rating (Quick Sort)
    - `/recommend popular` - Should show by popularity (Priority Queue)
-   - `/nearby delhi` - Should find nearby equipment (Dijkstra)
-   - `/optimize 50000` - Should optimize selection (Knapsack DP)
+   - `/book <equipment_id>` - View booking information
+   - `/mybookings` - View your bookings
 
 ## Sample Data Details
 
