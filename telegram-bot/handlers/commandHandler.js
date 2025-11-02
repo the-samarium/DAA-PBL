@@ -6,7 +6,6 @@
 import SearchHandler from './searchHandler.js';
 import RecommendHandler from './recommendHandler.js';
 import BookingHandler from './bookingHandler.js';
-import LocationHandler from './locationHandler.js';
 
 export class CommandHandler {
   constructor(bot, supabaseService) {
@@ -15,7 +14,6 @@ export class CommandHandler {
     this.search = new SearchHandler(bot, supabaseService);
     this.recommend = new RecommendHandler(bot, supabaseService);
     this.booking = new BookingHandler(bot, supabaseService);
-    this.location = new LocationHandler(bot, supabaseService);
   }
 
   /**
@@ -43,24 +41,12 @@ export class CommandHandler {
           await this.recommend.handle(msg, args);
           break;
         
-        case '/nearby':
-          await this.location.handle(msg, args);
-          break;
-        
         case '/book':
           await this.booking.handle(msg, args);
           break;
         
-        case '/optimize':
-          await this.booking.handleOptimize(msg, args);
-          break;
-        
         case '/mybookings':
           await this.booking.handleMyBookings(msg);
-          break;
-        
-        case '/analytics':
-          await this.handleAnalytics(msg);
           break;
         
         default:
@@ -85,23 +71,19 @@ export class CommandHandler {
     const welcomeText = `
 🌾 *Welcome to AgriLink Bot!*
 
-I help you find and rent agricultural equipment using advanced algorithms.
+I help you find agricultural equipment using advanced algorithms.
 
 *Available Commands:*
 /search - Search equipment (uses Trie + Binary Search)
 /recommend - Get recommendations (uses Merge Sort + Priority Queue)
-/nearby - Find nearby equipment (uses Dijkstra's Algorithm)
-/book - Book equipment (uses Greedy Algorithm)
-/optimize - Optimize selection within budget (uses Dynamic Programming)
-/mybookings - View your bookings
-/help - Show this help message
+/book - View booking information (redirects to website)
+/mybookings - View your bookings (redirects to website)
+/help - Show detailed help message
 
 *DAA Concepts Used:*
-• Graph Algorithms (Dijkstra) for location search
 • Sorting Algorithms (Quick Sort, Merge Sort)
 • Search Algorithms (Binary Search, BST, Trie)
-• Dynamic Programming for optimization
-• Greedy Algorithms for scheduling
+• Data Structures (Priority Queue)
 
 Type /help for detailed information about each command.
     `;
@@ -123,81 +105,39 @@ Type /help for detailed information about each command.
     const helpText = `
 *AgriLink Bot - Help*
 
-*Commands:*
+*Available Commands:*
 
 1️⃣ */search <query>*
    Search equipment by name
    Algorithm: Trie (Prefix Tree) for autocomplete
+   Time Complexity: O(m + k) where m=query length, k=results
    Example: /search combine harvester
 
 2️⃣ */recommend [price|rating|popular]*
    Get top equipment recommendations
    Algorithm: Merge Sort + Priority Queue
+   Time Complexity: O(n log n)
    Example: /recommend price
 
-3️⃣ */nearby <location>*
-   Find nearest equipment to your location
-   Algorithm: Dijkstra's Shortest Path
-   Example: /nearby delhi
+3️⃣ */book*
+   Get information about booking equipment
+   Note: Visit our website to complete bookings
 
-4️⃣ */book <equipment_id>*
-   Book equipment
-   Algorithm: Greedy Activity Selection
-   Example: /book abc123
-
-5️⃣ */optimize <budget>*
-   Find optimal equipment within budget
-   Algorithm: 0/1 Knapsack (Dynamic Programming)
-   Example: /optimize 50000
-
-6️⃣ */mybookings*
-   View your rental history
+4️⃣ */mybookings*
+   View your bookings
+   Note: Visit our website to see all your bookings
 
 *About DAA Concepts:*
-This bot demonstrates various Design and Analysis of Algorithms concepts:
-• Graph algorithms for spatial problems
-• Sorting for data organization
-• Search algorithms for efficient lookups
-• Dynamic programming for optimization
-• Greedy algorithms for scheduling
+This bot demonstrates Design and Analysis of Algorithms concepts:
+• Trie (Prefix Tree) for autocomplete search
+• Merge Sort for stable sorting
+• Quick Sort for efficient sorting
+• Priority Queue for top-k recommendations
+• Binary Search for fast lookups
     `;
 
     await this.bot.sendMessage(msg.chat.id, helpText, { parse_mode: 'Markdown' });
   }
 
-  /**
-   * Handle /analytics command
-   */
-  async handleAnalytics(msg) {
-    try {
-      const equipment = await this.supabaseService.getAllEquipment();
-      
-      const stats = {
-        total: equipment.length,
-        avgPrice: equipment.reduce((sum, e) => sum + (parseFloat(e.price_per_day) || 0), 0) / equipment.length,
-        priceRange: {
-          min: Math.min(...equipment.map(e => parseFloat(e.price_per_day) || 0)),
-          max: Math.max(...equipment.map(e => parseFloat(e.price_per_day) || 0))
-        }
-      };
-
-      const analyticsText = `
-*Equipment Analytics*
-
-📊 Total Equipment: ${stats.total}
-💰 Average Price: ₹${stats.avgPrice.toFixed(2)}/day
-📈 Price Range: ₹${stats.priceRange.min} - ₹${stats.priceRange.max}
-
-*Algorithms Used:*
-• O(n) iteration for statistics
-• Min/Max finding: O(n)
-• Average calculation: O(n)
-      `;
-
-      await this.bot.sendMessage(msg.chat.id, analyticsText, { parse_mode: 'Markdown' });
-    } catch (error) {
-      await this.bot.sendMessage(msg.chat.id, 'Error fetching analytics.');
-    }
-  }
 }
 

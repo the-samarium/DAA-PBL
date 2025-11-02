@@ -46,17 +46,7 @@ bot.on('callback_query', async (query) => {
   await bot.answerCallbackQuery(query.id);
 });
 
-bot.on('location', async (msg) => {
-  try {
-    const location = msg.location;
-    if (location) {
-      // Use location for nearby search
-      await commandHandler.location.handleLocation(msg, location);
-    }
-  } catch (error) {
-    console.error('Location handler error:', error);
-  }
-});
+// Location handler removed - /nearby command not available
 
 // Error handling
 bot.on('error', (error) => {
@@ -68,12 +58,16 @@ bot.on('polling_error', (error) => {
 });
 
 console.log('🤖 AgriLink Telegram Bot is running!');
-console.log('📚 Using DAA concepts:');
-console.log('  - Graph Algorithms (Dijkstra)');
+console.log('📚 Available Commands:');
+console.log('  - /search - Search equipment (Trie + Binary Search)');
+console.log('  - /recommend - Get recommendations (Merge Sort + Priority Queue)');
+console.log('  - /book - Booking information (redirects to website)');
+console.log('  - /mybookings - View bookings (redirects to website)');
+console.log('  - /help - Show help message');
+console.log('📚 DAA concepts:');
 console.log('  - Sorting Algorithms (Quick Sort, Merge Sort)');
 console.log('  - Search Algorithms (Binary Search, BST, Trie)');
-console.log('  - Dynamic Programming (Knapsack)');
-console.log('  - Greedy Algorithms (Activity Selection)');
+console.log('  - Data Structures (Priority Queue)');
 
 export default bot;
 
