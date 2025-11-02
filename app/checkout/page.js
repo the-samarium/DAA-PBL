@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ import { supabase } from '@/lib/supabaseClient'
 import { toast } from 'sonner'
 import { ShoppingCart, Check, DollarSign, Calendar } from 'lucide-react'
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const harvesterId = searchParams.get('harvesterId')
@@ -319,5 +319,17 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-white">Loading...</p>
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   )
 }
