@@ -1,13 +1,12 @@
 /**
- * Search Handler using Trie and Binary Search
+ * Search Handler using Trie
  * 
  * DAA Concepts:
  * - Trie (Prefix Tree) for autocomplete
- * - Binary Search for exact matches
+ * - Merge Sort for sorting results
  */
 
 import { Trie } from '../algorithms/search/trie.js';
-import { BinarySearch } from '../algorithms/search/binarySearch.js';
 import { MergeSort } from '../algorithms/sorting/mergeSort.js';
 
 export default class SearchHandler {
@@ -15,7 +14,6 @@ export default class SearchHandler {
     this.bot = bot;
     this.supabaseService = supabaseService;
     this.trie = new Trie();
-    this.binarySearch = new BinarySearch();
     this.mergeSort = new MergeSort();
     this.equipmentCache = null;
     this.buildIndex();
@@ -77,11 +75,10 @@ export default class SearchHandler {
 
       const queryLower = query.toLowerCase().trim();
 
-      // Step 1: Use Trie for autocomplete/prefix matching
+      // Use Trie for autocomplete/prefix matching
       const prefixMatches = this.trie.getWordsWithPrefix(queryLower, 10);
       
-      // Step 2: Also search for exact matches using Binary Search
-      // Sort equipment by name for binary search
+      // Sort equipment by name for display
       if (!this.equipmentCache || this.equipmentCache.length === 0) {
         await this.bot.sendMessage(
           msg.chat.id,
@@ -108,7 +105,7 @@ export default class SearchHandler {
 
       // Prepare results message
       let message = `🔍 *Search Results for "${query}"*\n\n`;
-      message += `*Algorithm Used:* Trie (Prefix Tree) + Binary Search\n`;
+      message += `*Algorithm Used:* Trie (Prefix Tree)\n`;
       message += `*Time Complexity:* O(m + k) where m=query length, k=results\n\n`;
       message += `*Found ${prefixMatches.length} result(s):*\n\n`;
 

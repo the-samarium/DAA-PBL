@@ -8,7 +8,7 @@
 
 **Solution:**
 1. Use `harvesters` (plural) in all SQL queries
-2. Or run `create-table-and-insert.sql` to create the table first
+2. Or run `CREATE_AND_INSERT.sql` to create the table first
 
 ### Error: `column does not exist`
 
@@ -27,7 +27,7 @@ ALTER TABLE harvesters ADD COLUMN IF NOT EXISTS available BOOLEAN DEFAULT true;
 
 **Problem:** The harvesters table hasn't been created yet.
 
-**Solution:** Run `create-table-and-insert.sql` which will:
+**Solution:** Run `CREATE_AND_INSERT.sql` which will:
 1. Create the table if it doesn't exist
 2. Insert sample data
 
